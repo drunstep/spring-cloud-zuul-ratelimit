@@ -326,7 +326,7 @@ missing methods and fields.
 
 === Code of Conduct
 This project adheres to the Contributor Covenant 
-https://github.com/marcosbarbero/spring-cloud-starter-zuul-ratelimit/blob/master/docs/code-of-conduct.adoc[code of conduct].
+https://github.com/marcosbarbero/spring-cloud-starter-netflix-zuul-ratelimit/blob/master/docs/code-of-conduct.adoc[code of conduct].
 By participating, you are expected to uphold this code. Please report unacceptable behavior to marcos.hgb@gmail.com.
 
 === Acknowledgement
@@ -334,5 +334,5 @@ By participating, you are expected to uphold this code. Please report unacceptab
 image::jetbrains_logo.png[Jetbrains, 150, link="https://www.jetbrains.com/"]
 
 == Footnote
-Any doubt open an https://github.com/marcosbarbero/spring-cloud-starter-zuul-ratelimit/issues[issue].
-Any fix send me a https://github.com/marcosbarbero/spring-cloud-starter-zuul-ratelimit/pulls[Pull Request].
+Any doubt open an https://github.com/marcosbarbero/spring-cloud-starter-netflix-zuul-ratelimit/issues[issue].
+Any fix send me a https://github.com/marcosbarbero/spring-cloud-starter-netflix-zuul-ratelimit/pulls[Pull Request].

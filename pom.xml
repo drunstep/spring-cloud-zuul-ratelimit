@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
+        <version>2.0.2.RELEASE</version>
     </parent>
 
     <groupId>com.marcosbarbero.cloud</groupId>
@@ -82,7 +82,15 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Edgware.SR3</version>
+                <version>Finchley.RC1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-netflix-dependencies</artifactId>
+                <version>2.0.0.RC1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -109,7 +117,7 @@
         <module>spring-cloud-zuul-ratelimit-tests/bucket4j-infinispan</module>
         <module>spring-cloud-zuul-ratelimit-coverage</module>
         <module>spring-cloud-zuul-ratelimit-dependencies</module>
-        <module>spring-cloud-starter-zuul-ratelimit</module>
+        <module>spring-cloud-starter-netflix-zuul-ratelimit</module>
     </modules>
 
     <dependencies>
@@ -253,5 +261,16 @@
             </build>
         </profile>
     </profiles>
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/libs-milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>

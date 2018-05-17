@@ -14,10 +14,10 @@ import org.mockito.MockitoAnnotations;
 
 public class Bucket4jInfinispanRateLimiterTest extends BaseRateLimiterTest {
 
+    private static final DefaultCacheManager cacheManager = new DefaultCacheManager();
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        DefaultCacheManager cacheManager = new DefaultCacheManager();
         cacheManager.defineConfiguration("rateLimit", new ConfigurationBuilder().build());
         AdvancedCache<String, GridBucketState> cache = cacheManager.<String, GridBucketState>getCache("rateLimit").getAdvancedCache();
         FunctionalMapImpl<String, GridBucketState> functionalMap = FunctionalMapImpl.create(cache);
@@ -27,7 +27,6 @@ public class Bucket4jInfinispanRateLimiterTest extends BaseRateLimiterTest {
 
     @After
     public void tearDown() {
-        DefaultCacheManager cacheManager = new DefaultCacheManager();
         cacheManager.removeCache("rateLimit");
     }
 }

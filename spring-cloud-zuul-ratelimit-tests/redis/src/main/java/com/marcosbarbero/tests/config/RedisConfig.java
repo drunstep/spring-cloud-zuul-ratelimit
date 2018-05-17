@@ -11,7 +11,7 @@ import javax.annotation.PreDestroy;
 
 import redis.embedded.RedisServer;
 
-import static redis.clients.jedis.Protocol.DEFAULT_PORT;
+//import static redis.clients.jedis.Protocol.DEFAULT_PORT;
 
 /**
  * Embedded redis configuration.
@@ -21,6 +21,8 @@ import static redis.clients.jedis.Protocol.DEFAULT_PORT;
  */
 @Configuration
 public class RedisConfig {
+
+    private static final int DEFAULT_PORT = 6379;
 
     private RedisServer redisServer;
 
