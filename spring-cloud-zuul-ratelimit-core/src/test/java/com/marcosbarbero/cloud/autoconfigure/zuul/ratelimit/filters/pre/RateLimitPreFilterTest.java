@@ -51,7 +51,7 @@ public class RateLimitPreFilterTest {
         rateLimitProperties = new RateLimitProperties();
         UrlPathHelper urlPathHelper = new UrlPathHelper();
         RateLimitUtils rateLimitUtils = new RateLimitUtils(rateLimitProperties);
-        target = new RateLimitPreFilter(rateLimitProperties, routeLocator, urlPathHelper, rateLimiter, rateLimitKeyGenerator, rateLimitUtils);
+        target = new RateLimitPreFilter(rateLimitProperties, routeLocator, urlPathHelper, rateLimiter, rateLimitKeyGenerator, rateLimitUtils, null);
     }
 
     @Test

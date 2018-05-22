@@ -55,6 +55,7 @@ import javax.cache.Cache;
 import lombok.RequiredArgsConstructor;
 import org.apache.ignite.IgniteCache;
 import org.infinispan.functional.FunctionalMap.ReadWriteMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -101,9 +102,9 @@ public class RateLimitAutoConfiguration {
     @Bean
     public ZuulFilter rateLimiterPreFilter(RateLimiter rateLimiter, RateLimitProperties rateLimitProperties,
                                            RouteLocator routeLocator, RateLimitKeyGenerator rateLimitKeyGenerator,
-                                           RateLimitUtils rateLimitUtils) {
+                                           RateLimitUtils rateLimitUtils, @Autowired(required = false) RateLimitExceedListener rateLimitExceedListener) {
         return new RateLimitPreFilter(rateLimitProperties, routeLocator, new UrlPathHelper(), rateLimiter,
-                rateLimitKeyGenerator, rateLimitUtils);
+                rateLimitKeyGenerator, rateLimitUtils, rateLimitExceedListener);
     }
 
     @Bean

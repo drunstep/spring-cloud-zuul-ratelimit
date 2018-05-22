@@ -27,6 +27,7 @@ import static org.springframework.cloud.netflix.zuul.filters.support.FilterConst
 import static org.springframework.cloud.netflix.zuul.filters.support.FilterConstants.PRE_TYPE;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
+import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.RateLimitExceedListener;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.Rate;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.RateLimitKeyGenerator;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.RateLimiter;
@@ -51,13 +52,15 @@ public class RateLimitPreFilter extends AbstractRateLimitFilter {
 
     private final RateLimiter rateLimiter;
     private final RateLimitKeyGenerator rateLimitKeyGenerator;
+    private final RateLimitExceedListener rateLimitExceedListener;
 
     public RateLimitPreFilter(RateLimitProperties properties, RouteLocator routeLocator,
         UrlPathHelper urlPathHelper, RateLimiter rateLimiter, RateLimitKeyGenerator rateLimitKeyGenerator,
-        RateLimitUtils rateLimitUtils) {
+        RateLimitUtils rateLimitUtils, RateLimitExceedListener rateLimitExceedListener) {
         super(properties, routeLocator, urlPathHelper, rateLimitKeyGenerator, rateLimitUtils);
         this.rateLimiter = rateLimiter;
         this.rateLimitKeyGenerator = rateLimitKeyGenerator;
+        this.rateLimitExceedListener = rateLimitExceedListener;
     }
 
     @Override
@@ -102,10 +105,14 @@ public class RateLimitPreFilter extends AbstractRateLimitFilter {
             response.setHeader(HEADER_RESET + httpHeaderKey, String.valueOf(rate.getReset()));
 
             if ((limit != null && remaining < 0) || (quota != null && remainingQuota < 0)) {
-                ctx.setResponseStatusCode(HttpStatus.TOO_MANY_REQUESTS.value());
-                ctx.put("rateLimitExceeded", "true");
-                ctx.setSendZuulResponse(false);
-                throw new RateLimitExceededException();
+                if (rateLimitExceedListener != null) {
+                    rateLimitExceedListener.onLimitExceed(ctx, policy, route);
+                } else {
+                    ctx.put("rateLimitExceeded", "true");
+                    ctx.setResponseStatusCode(HttpStatus.TOO_MANY_REQUESTS.value());
+                    ctx.setSendZuulResponse(false);
+                    throw new RateLimitExceededException();
+                }
             }
         });
 
