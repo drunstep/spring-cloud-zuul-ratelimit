@@ -31,7 +31,7 @@ public class JpaLimitPreFilterTest extends BaseRateLimitPreFilterTest {
         });
         when(rateLimiterRepository.findById(any())).thenAnswer(invocationOnMock -> {
             String key = invocationOnMock.getArgument(0);
-            return Optional.ofNullable(repository.get(key));
+            return Optional.of(repository.get(key));
         });
         RateLimiterErrorHandler rateLimiterErrorHandler = mock(RateLimiterErrorHandler.class);
         this.setRateLimiter(new JpaRateLimiter(rateLimiterErrorHandler, rateLimiterRepository));

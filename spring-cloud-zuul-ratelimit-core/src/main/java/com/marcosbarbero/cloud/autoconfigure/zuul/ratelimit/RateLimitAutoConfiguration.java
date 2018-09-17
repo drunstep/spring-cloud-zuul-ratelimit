@@ -16,14 +16,12 @@
 
 package com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit;
 
-import static com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties.PREFIX;
-
 import com.ecwid.consul.v1.ConsulClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.hazelcast.core.IMap;
-import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.DefaultRateLimitKeyGenerator;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.RateLimitKeyGenerator;
+import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.RateLimitUtils;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.RateLimiter;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties.Policy;
@@ -40,7 +38,8 @@ import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.repository.sp
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.repository.springdata.RateLimiterRepository;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.filters.RateLimitPostFilter;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.filters.RateLimitPreFilter;
-import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.support.RateLimitUtils;
+import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.support.DefaultRateLimitKeyGenerator;
+import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.support.DefaultRateLimitUtils;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.support.StringToMatchTypeConverter;
 import com.netflix.zuul.ZuulFilter;
 import io.github.bucket4j.grid.GridBucketState;
@@ -48,10 +47,6 @@ import io.github.bucket4j.grid.hazelcast.Hazelcast;
 import io.github.bucket4j.grid.ignite.Ignite;
 import io.github.bucket4j.grid.infinispan.Infinispan;
 import io.github.bucket4j.grid.jcache.JCache;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.cache.Cache;
 import lombok.RequiredArgsConstructor;
 import org.apache.ignite.IgniteCache;
 import org.infinispan.functional.FunctionalMap.ReadWriteMap;
@@ -72,6 +67,12 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.util.UrlPathHelper;
+
+import javax.annotation.PostConstruct;
+import javax.cache.Cache;
+import java.util.List;
+
+import static com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties.PREFIX;
 
 /**
  * @author Marcos Barbero
@@ -95,8 +96,9 @@ public class RateLimitAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(RateLimitUtils.class)
     public RateLimitUtils rateLimitUtils(RateLimitProperties rateLimitProperties) {
-        return new RateLimitUtils(rateLimitProperties);
+        return new DefaultRateLimitUtils(rateLimitProperties);
     }
 
     @Bean
@@ -237,7 +239,7 @@ public class RateLimitAutoConfiguration {
         public void init() {
             Policy defaultPolicy = rateLimitProperties.getDefaultPolicy();
             if (defaultPolicy != null) {
-                ArrayList<Policy> defaultPolicies = Lists.newArrayList(defaultPolicy);
+                List<Policy> defaultPolicies = Lists.newArrayList(defaultPolicy);
                 defaultPolicies.addAll(rateLimitProperties.getDefaultPolicyList());
                 rateLimitProperties.setDefaultPolicyList(defaultPolicies);
             }

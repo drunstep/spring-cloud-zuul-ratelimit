@@ -34,7 +34,7 @@ public class JpaRateLimiterTest extends BaseRateLimiterTest {
         });
         when(rateLimiterRepository.findById(any())).thenAnswer(invocationOnMock -> {
             String key = invocationOnMock.getArgument(0);
-            return Optional.ofNullable(repository.get(key));
+            return Optional.of(repository.get(key));
         });
 
         target = new JpaRateLimiter(rateLimiterErrorHandler, rateLimiterRepository);
